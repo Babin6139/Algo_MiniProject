@@ -1,13 +1,6 @@
 #![allow(unused)]
+use cli_table::{format::Justify, print_stdout, Cell, Style, Table};
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        let result = 2 + 2;
-        assert_eq!(result, 4);
-    }
-}
 #[derive(Clone, PartialEq, Debug, Copy)]
 pub struct Activity {
     pub group: i32,
@@ -50,37 +43,119 @@ pub fn GreedyActivitySelect(mut activity: &mut [Activity]) -> (Vec<Activity>, Ve
 }
 
 pub fn checkTime(activities: &[Activity]) {
-    let mut G1: i32 = 0;
-    let mut G2: i32 = 0;
-    let mut G3: i32 = 0;
-    let mut G4: i32 = 0;
-    let mut G5: i32 = 0;
-    let mut G6: i32 = 0;
+    let mut g1: i32 = 0;
+    let mut g2: i32 = 0;
+    let mut g3: i32 = 0;
+    let mut g4: i32 = 0;
+    let mut g5: i32 = 0;
+    let mut g6: i32 = 0;
+    let mut g1_prevactivity: Activity = Activity::new(1, 0, 0, "dummy");
+    let mut g2_prevactivity: Activity = Activity::new(2, 0, 0, "dummy");
+    let mut g3_prevactivity: Activity = Activity::new(3, 0, 0, "dummy");
+    let mut g4_prevactivity: Activity = Activity::new(4, 0, 0, "dummy");
+    let mut g5_prevactivity: Activity = Activity::new(5, 0, 0, "dummy");
+    let mut g6_prevactivity: Activity = Activity::new(6, 0, 0, "dummy");
 
     for activity in activities {
-        match activity.group {
-            1 => {
-                G1 = G1 + (activity.finish_time - activity.start_time);
+        if activity.start_time < activity.finish_time {
+            match activity.group {
+                1 => {
+                    if (g1_prevactivity.finish_time > activity.start_time
+                        && g1_prevactivity.start_time != 0)
+                    {
+                        panic!("Single group has colliding times");
+                    } else {
+                        g1_prevactivity.finish_time = activity.finish_time;
+                        g1_prevactivity.start_time = activity.start_time;
+                    }
+                    if (activity.finish_time - activity.start_time <= 2) {
+                        g1 = g1 + (activity.finish_time - activity.start_time);
+                    } else {
+                        panic!("Single group has more the two hours continuos lecture");
+                    }
+                }
+                2 => {
+                    if (g2_prevactivity.finish_time > activity.start_time
+                        && g2_prevactivity.start_time != 0)
+                    {
+                        panic!("Single group has colliding times");
+                    } else {
+                        g2_prevactivity.finish_time = activity.finish_time;
+                        g2_prevactivity.start_time = activity.start_time;
+                    }
+                    if (activity.finish_time - activity.start_time <= 2) {
+                        g2 = g2 + (activity.finish_time - activity.start_time);
+                    } else {
+                        panic!("Single group has more the two hours continuos lecture");
+                    }
+                }
+                3 => {
+                    if (g3_prevactivity.finish_time > activity.start_time
+                        && g3_prevactivity.start_time != 0)
+                    {
+                        panic!("Single group has colliding times");
+                    } else {
+                        g3_prevactivity.finish_time = activity.finish_time;
+                        g3_prevactivity.start_time = activity.start_time;
+                    }
+                    if (activity.finish_time - activity.start_time <= 2) {
+                        g3 = g3 + (activity.finish_time - activity.start_time);
+                    } else {
+                        panic!("Single group has more the two hours continuos lecture");
+                    }
+                }
+                4 => {
+                    if (g4_prevactivity.finish_time > activity.start_time
+                        && g4_prevactivity.start_time != 0)
+                    {
+                        panic!("Single group has colliding times");
+                    } else {
+                        g4_prevactivity.finish_time = activity.finish_time;
+                        g4_prevactivity.start_time = activity.start_time;
+                    }
+                    if (activity.finish_time - activity.start_time <= 2) {
+                        g4 = g4 + (activity.finish_time - activity.start_time);
+                    } else {
+                        panic!("Single group has more the two hours continuos lecture");
+                    }
+                }
+                5 => {
+                    if (g5_prevactivity.finish_time > activity.start_time
+                        && g5_prevactivity.start_time != 0)
+                    {
+                        panic!("Single group has colliding times");
+                    } else {
+                        g5_prevactivity.finish_time = activity.finish_time;
+                        g5_prevactivity.start_time = activity.start_time;
+                    }
+                    if (activity.finish_time - activity.start_time <= 2) {
+                        g5 = g5 + (activity.finish_time - activity.start_time);
+                    } else {
+                        panic!("Single group has more the two hours continuos lecture");
+                    }
+                }
+                6 => {
+                    if (g6_prevactivity.finish_time > activity.start_time
+                        && g6_prevactivity.start_time != 0)
+                    {
+                        panic!("Single group has colliding times");
+                    } else {
+                        g6_prevactivity.finish_time = activity.finish_time;
+                        g6_prevactivity.start_time = activity.start_time;
+                    }
+                    if (activity.finish_time - activity.start_time <= 2) {
+                        g6 = g6 + (activity.finish_time - activity.start_time);
+                    } else {
+                        panic!("Single group has more the two hours continuos lecture");
+                    }
+                }
+                _ => {}
             }
-            2 => {
-                G2 = G2 + (activity.finish_time - activity.start_time);
-            }
-            3 => {
-                G3 = G3 + (activity.finish_time - activity.start_time);
-            }
-            4 => {
-                G4 = G4 + (activity.finish_time - activity.start_time);
-            }
-            5 => {
-                G5 = G5 + (activity.finish_time - activity.start_time);
-            }
-            6 => {
-                G6 = G6 + (activity.finish_time - activity.start_time);
-            }
-            _ => {}
+        } else {
+            panic!("Finish time is not greater than start time");
         }
     }
-    if G1 > 4 || G2 > 4 || G3 > 4 || G4 > 4 || G5 > 4 || G6 > 4 {
+    if g1 > 4 || g2 > 4 || g3 > 4 || g4 > 4 || g5 > 4 || g6 > 4 {
         panic!("One of the groups contain more than 4 hours lecture");
     }
 }
@@ -106,7 +181,7 @@ pub fn merge(unsorted_data: &mut [Activity], p: usize, q: usize, r: usize) -> ()
             unsorted_data[k] = L1[i];
             i = i + 1;
         } else {
-            if L1[i].finish_time < R1[j].finish_time {
+            if L1[i].finish_time <= R1[j].finish_time {
                 unsorted_data[k] = L1[i];
                 i = i + 1;
             } else {
@@ -116,4 +191,20 @@ pub fn merge(unsorted_data: &mut [Activity], p: usize, q: usize, r: usize) -> ()
         }
     }
     ()
+}
+
+pub fn print_table(mut activity: &[Activity], class: &str) {
+    println!("\n {}", class);
+    for activity in activity {
+        let table = vec![vec![format!(
+            "{}-{} \n{}\nGroup {}",
+            activity.start_time, activity.finish_time, activity.course_name, activity.group
+        )
+        .cell()
+        .justify(Justify::Center)]]
+        .table()
+        .title(vec!["Activity".cell().bold(true)])
+        .bold(true);
+        assert!(print_stdout(table).is_ok());
+    }
 }
